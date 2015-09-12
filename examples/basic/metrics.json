@@ -1,0 +1,13 @@
+{
+	"metrics":[
+		{
+			"name":"FieldCount",
+			"type":"FieldCount"
+		},
+		{
+			"name":"RegexAlpha",
+			"type":"RegularExpression",
+			"regex":"^[a-zA-Z]$"
+		}
+	]
+}
