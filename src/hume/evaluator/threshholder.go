@@ -14,7 +14,10 @@ type Thresholder struct {
 }
 
 func (t *Thresholder) IsOkay(testValue float64, msg_prefix string) Evaluation {
-	e := Evaluation{"", true}
+	e := Evaluation{
+		Msg: "",
+		Ok:  true,
+	}
 
 	errorOnLess := strings.Contains(t.ErrorOn, "<")
 	errorOnEqual := strings.Contains(t.ErrorOn, "=")

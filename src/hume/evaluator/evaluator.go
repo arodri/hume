@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
-	"hume/metric"
 )
 
 func GetEvaluators(configs []json.RawMessage) []Evaluator {
 	evaluators := []Evaluator{}
 	for _, config := range configs {
+		e := GetEvaluator(config)
+		log.Debug(fmt.Sprintf("Created Evaluator: %s", e.GetDescription()))
 		evaluators = append(evaluators, GetEvaluator(config))
 	}
 	return evaluators
@@ -21,7 +22,7 @@ func GetEvaluator(config []byte) Evaluator {
 	be := BaseEvaluator{}
 	err = json.Unmarshal(config, &be)
 	if err != nil {
-		log.Fatal("Invalid evaluator config, need evaluator, metric_name, and silence defined", err)
+		log.Fatal("Invalid evaluator config, need evaluator, and silence defined", err)
 	}
 
 	var e Evaluator
@@ -47,12 +48,11 @@ func GetEvaluator(config []byte) Evaluator {
 
 type BaseEvaluator struct {
 	Evaluator   string `json:"evaluator"`
-	MetricName  string `json:"metric_name"`
 	Silence     bool   `json:"silence"`
 	Description string `json:"description"`
 }
 
-func (be *BaseEvaluator) GetName() string {
+func (be *BaseEvaluator) GetType() string {
 	return be.Evaluator
 }
 
@@ -60,23 +60,19 @@ func (be *BaseEvaluator) ShouldAlert() bool {
 	return be.Silence
 }
 
-func (be *BaseEvaluator) GetMetricName() string {
-	return be.MetricName
-}
-
 func (be *BaseEvaluator) GetDescription() string {
 	return be.Description
 }
 
 type Evaluator interface {
-	Evaluate(test metric.MetricResult) Evaluation
-	GetName() string
+	Evaluate(data map[string]int, total int) Evaluation
+	GetType() string
 	ShouldAlert() bool
-	GetMetricName() string
 	GetDescription() string
 }
 
 type Evaluation struct {
-	Msg string
-	Ok  bool
+	Description string
+	Msg         string
+	Ok          bool
 }

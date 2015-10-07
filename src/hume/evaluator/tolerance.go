@@ -11,7 +11,10 @@ type Tolerance struct {
 }
 
 func (t *Tolerance) IsOkay(testValue float64, msg_prefix string) Evaluation {
-	e := Evaluation{"", true}
+	e := Evaluation{
+		Msg: "",
+		Ok:  true,
+	}
 
 	min := t.Target * t.MinTolerance
 	max := t.Target * t.MaxTolerance

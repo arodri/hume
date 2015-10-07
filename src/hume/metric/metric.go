@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Sirupsen/logrus"
+	"hume/evaluator"
 	"hume/record"
 	"sync"
 )
@@ -11,7 +12,10 @@ import (
 func GetMetrics(configs []json.RawMessage) []Metric {
 	metrics := []Metric{}
 	for _, config := range configs {
-		metrics = append(metrics, GetMetric(config))
+		m := GetMetric(config)
+		logrus.Debug(fmt.Sprintf("Created Metric: %s", m.GetName()))
+		m.SetEvaluators(evaluator.GetEvaluators(m.GetEvaluatorConfigs()))
+		metrics = append(metrics, m)
 	}
 	return metrics
 }
@@ -68,12 +72,14 @@ func GetMetric(config []byte) Metric {
 }
 
 type BaseMetric struct {
-	Name         string `json:"name"`
-	Type         string `json:"type"`
-	inputChannel chan *record.Record
-	waitGroup    *sync.WaitGroup
-	metricImpl   MetricImpl
-	mutex        sync.Mutex
+	Name             string            `json:"name"`
+	Type             string            `json:"type"`
+	EvaluatorConfigs []json.RawMessage `json:"evaluators"`
+	evaluators       []evaluator.Evaluator
+	inputChannel     chan *record.Record
+	waitGroup        *sync.WaitGroup
+	metricImpl       MetricImpl
+	mutex            sync.Mutex
 }
 
 func (bm *BaseMetric) GetName() string {
@@ -104,6 +110,10 @@ func (bm *BaseMetric) SetMetricImpl(m MetricImpl) {
 	bm.metricImpl = m
 }
 
+func (bm *BaseMetric) SetEvaluators(e []evaluator.Evaluator) {
+	bm.evaluators = e
+}
+
 func (bm *BaseMetric) Collect() {
 	go func() {
 		for rec := range bm.inputChannel {
@@ -113,6 +123,18 @@ func (bm *BaseMetric) Collect() {
 		}
 		bm.waitGroup.Done()
 	}()
+}
+
+func (bm *BaseMetric) Evaluate() []evaluator.Evaluation {
+	evaluations := []evaluator.Evaluation{}
+
+	mr := bm.Result()
+
+	for _, e := range bm.evaluators {
+		logrus.Debug(fmt.Sprintf("Evaluating: %s", e.GetDescription()))
+		evaluations = append(evaluations, e.Evaluate(mr.Data, mr.Total))
+	}
+	return evaluations
 }
 
 func (bm *BaseMetric) Init() error {
@@ -129,6 +151,14 @@ func (bm *BaseMetric) Result() MetricResult {
 
 func (bm *BaseMetric) Process(rec *record.Record) {
 	bm.metricImpl.Process(rec)
+}
+
+func (bm *BaseMetric) GetEvaluators() []evaluator.Evaluator {
+	return bm.evaluators
+}
+
+func (bm *BaseMetric) GetEvaluatorConfigs() []json.RawMessage {
+	return bm.EvaluatorConfigs
 }
 
 type MetricImpl interface {
@@ -148,6 +178,10 @@ type Metric interface {
 	GetInputChannel() chan *record.Record
 	SetMetricImpl(m MetricImpl)
 	Collect()
+	Evaluate() []evaluator.Evaluation
+	GetEvaluators() []evaluator.Evaluator
+	SetEvaluators([]evaluator.Evaluator)
+	GetEvaluatorConfigs() []json.RawMessage
 }
 
 type MetricResult struct {

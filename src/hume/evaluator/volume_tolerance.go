@@ -2,7 +2,6 @@ package evaluator
 
 import (
 	"fmt"
-	"hume/metric"
 )
 
 type VolumeTolerance struct {
@@ -10,8 +9,10 @@ type VolumeTolerance struct {
 	Tolerance
 }
 
-func (v VolumeTolerance) Evaluate(test metric.MetricResult) Evaluation {
-	testValue := float64(test.Total)
-	prefix := fmt.Sprintf("Count=%d", test.Total)
-	return v.IsOkay(testValue, prefix)
+func (v VolumeTolerance) Evaluate(data map[string]int, total int) Evaluation {
+	testValue := float64(total)
+	prefix := fmt.Sprintf("Count=%d", total)
+	e := v.IsOkay(testValue, prefix)
+	e.Description = v.GetDescription()
+	return e
 }

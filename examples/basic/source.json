@@ -14,34 +14,98 @@
 	"metrics":[
 		{
 			"type":"FieldCount",
-			"name":"FieldCount"
+			"name":"FieldCount",
+			"evaluators":[
+				{
+					"evaluator":"ValueThreshold",
+					"description":"Field Count Is 3",
+					"value":"3",
+					"threshold":1.0,
+					"error_on":"<",
+					"silence":false,
+					"use_count":false
+				}
+			]
 		},
 		{	
 			"type":"Populated",
 			"name":"ValuePopulated",
-			"field":"value"
+			"field":"value",
+			"evaluators":[
+				{
+					"evaluator":"ValueThreshold",
+					"description":"Value Field Is Populated",
+					"value":"true",
+					"threshold":1.0,
+					"error_on":"<",
+					"silence":false,
+					"use_count":false
+				}
+			]
 		},
 		{
 			"type":"DateFormat",
 			"name":"ValidDate",
 			"field":"date",
-			"format":"2006-01-02 15:04:05"
+			"format":"2006-01-02 15:04:05",
+			"evaluators":[
+				{
+					"evaluator":"ValueThreshold",
+					"description":"Correct Date Format",
+					"value":"true",
+					"threshold":1.0,
+					"error_on":"<",
+					"silence":false,
+					"use_count":false
+				}
+			]
 		},
 		{
 			"type":"FutureDate",
 			"name":"FutureDate",
 			"field":"date",
-			"format":"2006-01-02 15:04:05"
+			"format":"2006-01-02 15:04:05",
+			"evaluators":[
+				{
+					"evaluator":"ValueThreshold",
+					"description":"No Future Dates",
+					"value":"true",
+					"threshold":0.0,
+					"error_on":">",
+					"silence":false,
+					"use_count":false
+				}
+			]
 		},
 		{
 			"type":"RegexTest",
 			"name":"ValueIsAlpha",
 			"field":"value",
-			"regex":"[a-zA-Z]+"
+			"regex":"[a-zA-Z]+",
+			"evaluators":[
+				{
+					"evaluator":"ValueThreshold",
+					"description":"Value Field is Alpha",
+					"value":"true",
+					"threshold":1.0,
+					"error_on":"<",
+					"silence":false,
+					"use_count":false
+				}
+			]
 		},
 		{
 			"type":"NumRecords",
-			"name":"NumRecords"
+			"name":"NumRecords",
+			"evaluators":[
+				{
+					"evaluator":"VolumeTolerance",
+					"description":"Number of Records",
+					"target":5,
+					"min":0.75,
+					"max":1.25
+				}
+			]
 		},
 		{
 			"type":"ValidValues",
@@ -49,77 +113,18 @@
 			"field":"value",
 			"values":[
 				"a","b","c","d","e"
+			],
+			"evaluators":[
+				{
+					"evaluator":"ValueThreshold",
+					"description":"Value is [a-e]",
+					"value":"true",
+					"threshold":1.0,
+					"error_on":"<",
+					"silence":false,
+					"use_count":false
+				}
 			]
-		}
-	],
-	"evaluators":[
-		{
-			"evaluator":"ValueThreshold",
-			"description":"FieldCount",
-			"metric_name":"FieldCount",
-			"value":"3",
-			"threshold":1.0,
-			"error_on":"<",
-			"silence":false,
-			"use_count":false
-		},
-		{
-			"evaluator":"ValueThreshold",
-			"description":"ValuePopulated",
-			"metric_name":"ValuePopulated",
-			"value":"true",
-			"threshold":1.0,
-			"error_on":"<",
-			"silence":false,
-			"use_count":false
-		},
-		{
-			"evaluator":"ValueThreshold",
-			"description":"DateFormat",
-			"metric_name":"ValidDate",
-			"value":"true",
-			"threshold":1.0,
-			"error_on":"<",
-			"silence":false,
-			"use_count":false
-		},
-		{
-			"evaluator":"ValueThreshold",
-			"description":"FutureDates",
-			"metric_name":"FutureDate",
-			"value":"true",
-			"threshold":0.0,
-			"error_on":">",
-			"silence":false,
-			"use_count":false
-		},
-		{
-			"evaluator":"ValueThreshold",
-			"description":"ValueIsAlpha",
-			"metric_name":"ValueIsAlpha",
-			"value":"true",
-			"threshold":1.0,
-			"error_on":"<",
-			"silence":false,
-			"use_count":false
-		},
-		{
-			"evaluator":"VolumeTolerance",
-			"description":"NumRecords",
-			"metric_name":"NumRecords",
-			"target":5,
-			"min":0.75,
-			"max":1.25
-		},
-		{
-			"evaluator":"ValueThreshold",
-			"description":"Value is [a-e]",
-			"metric_name":"ValidValues",
-			"value":"true",
-			"threshold":1.0,
-			"error_on":"<",
-			"silence":false,
-			"use_count":false
 		}
 	]
 }
