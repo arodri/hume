@@ -41,6 +41,7 @@ func (s *Source) Init() error {
 }
 
 func (s *Source) Collect() error {
+	var err error
 	for rec := range s.Reader.ChannelIterator(1000) {
 		// logrus.Debugf("%#v", rec)
 		for _, metric := range s.Metrics {
@@ -51,7 +52,13 @@ func (s *Source) Collect() error {
 		close(metric.GetInputChannel())
 	}
 	s.metricWG.Wait()
-	return nil
+	for _, metric := range s.Metrics {
+		err = metric.Finalize()
+		if err != nil {
+			return err
+		}
+	}
+	return err
 }
 
 func (s *Source) Evaluate() (int, int) {

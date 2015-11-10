@@ -11,13 +11,13 @@ type ValueThreshold struct {
 	UseCount bool   `json:"use_count"`
 }
 
-func (v ValueThreshold) Evaluate(data map[string]int, total int) Evaluation {
+func (v ValueThreshold) Evaluate(data map[string]float64, total int) Evaluation {
 	cnt, ok := data[v.Value]
 	if !ok {
 		cnt = 0
 	}
 
-	testValue := float64(cnt)
+	testValue := cnt
 	prefix := fmt.Sprintf("Value=%s:%d", v.Value, cnt)
 	if !v.UseCount && total > 0 {
 		testValue = testValue / float64(total)

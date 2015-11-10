@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"fmt"
+	"math"
 )
 
 type Tolerance struct {
@@ -20,6 +21,8 @@ func (t *Tolerance) IsOkay(testValue float64, msg_prefix string) Evaluation {
 	max := t.Target * t.MaxTolerance
 
 	if testValue < min || max < testValue {
+		e.Ok = false
+	} else if math.IsNaN(testValue) {
 		e.Ok = false
 	}
 

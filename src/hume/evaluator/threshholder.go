@@ -3,6 +3,7 @@ package evaluator
 import (
 	"fmt"
 	"strings"
+	"math"
 )
 
 type Thresholder struct {
@@ -28,6 +29,8 @@ func (t *Thresholder) IsOkay(testValue float64, msg_prefix string) Evaluation {
 	} else if errorOnGreater && testValue > t.Threshold {
 		e.Ok = false
 	} else if errorOnLess && testValue < t.Threshold {
+		e.Ok = false
+	} else if math.IsNaN(testValue) { 
 		e.Ok = false
 	}
 

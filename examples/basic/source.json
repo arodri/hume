@@ -125,6 +125,55 @@
 					"use_count":false
 				}
 			]
+		},
+		{
+			"type":"Mean",
+			"name":"Mean",
+			"field":"id",
+			"evaluators":[
+				{
+					"evaluator":"ValueThreshold",
+					"description":"Mean Is 3",
+					"value":"mean",
+					"threshold":3.0,
+					"error_on":"<>",
+					"silence":false,
+					"use_count":true
+				}
+			]
+		},
+		{
+			"type":"Percentile",
+			"name":"Percentile",
+			"field":"id",
+			"measure":80,
+			"evaluators":[
+				{
+					"evaluator":"ValueThreshold",
+					"description":"80th Percentile is 4",
+					"value":"percentile",
+					"threshold":4.0,
+					"error_on":"<>",
+					"silence":false,
+					"use_count":true
+				}
+			]
+		},
+		{
+			"type":"NumericDistribution",
+			"name":"NumericDistribution",
+			"field":"id",
+			"evaluators":[
+				{
+					"evaluator":"KS",
+					"description":"KS is less than 10",
+					"threshold":10.0,
+					"benchmark":"freq.json",
+					"error_on":">",
+					"silence":false,
+					"use_count":true
+				}
+			]
 		}
 	]
 }

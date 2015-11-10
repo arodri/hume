@@ -61,6 +61,22 @@ func GetMetric(config []byte) Metric {
 		ft := ValidValues{}
 		err = json.Unmarshal(config, &ft)
 		m.SetMetricImpl(&ft)
+	case "NominalDistribution":
+		ft := NominalDistribution{}
+		err = json.Unmarshal(config, &ft)
+		m.SetMetricImpl(&ft)
+	case "NumericDistribution":
+		ft := NumericDistribution{}
+		err = json.Unmarshal(config, &ft)
+		m.SetMetricImpl(&ft)
+	case "Mean":
+		ft := Mean{}
+		err = json.Unmarshal(config, &ft)
+		m.SetMetricImpl(&ft)
+	case "Percentile":
+		ft := Percentile{}
+		err = json.Unmarshal(config, &ft)
+		m.SetMetricImpl(&ft)
 
 	}
 	if err != nil {
@@ -185,6 +201,6 @@ type Metric interface {
 }
 
 type MetricResult struct {
-	Data  map[string]int
+	Data  map[string]float64
 	Total int
 }

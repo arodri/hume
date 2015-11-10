@@ -37,6 +37,10 @@ func GetEvaluator(config []byte) Evaluator {
 		v := VolumeTolerance{}
 		err = json.Unmarshal(config, &v)
 		e = &v
+	case "KS":
+		v := KS{}
+		err = json.Unmarshal(config, &v)
+		e = &v
 	}
 
 	if err != nil {
@@ -65,7 +69,7 @@ func (be *BaseEvaluator) GetDescription() string {
 }
 
 type Evaluator interface {
-	Evaluate(data map[string]int, total int) Evaluation
+	Evaluate(data map[string]float64, total int) Evaluation
 	GetType() string
 	ShouldAlert() bool
 	GetDescription() string

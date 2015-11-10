@@ -9,7 +9,7 @@ type VolumeTolerance struct {
 	Tolerance
 }
 
-func (v VolumeTolerance) Evaluate(data map[string]int, total int) Evaluation {
+func (v VolumeTolerance) Evaluate(data map[string]float64, total int) Evaluation {
 	testValue := float64(total)
 	prefix := fmt.Sprintf("Count=%d", total)
 	e := v.IsOkay(testValue, prefix)

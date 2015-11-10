@@ -3,13 +3,13 @@ package metric
 import ()
 
 type Counter struct {
-	counts map[string]int
+	counts map[string]float64
 	total  int
 }
 
 func (c *Counter) Init() error {
 	var err error
-	c.counts = make(map[string]int)
+	c.counts = make(map[string]float64)
 	return err
 }
 
