@@ -2,7 +2,6 @@ package metric
 
 import (
 	"hume/lib/numeric"
-	"strconv"
 )
 
 type Mean struct {
@@ -12,18 +11,19 @@ type Mean struct {
 
 func (m *Mean) Finalize() error {
 	m.result = make(map[string]float64)
-	sum := float64(0)
-	for k, v := range m.counts {
-		if k != numeric.EMPTY_STRING && k != numeric.NOT_A_FLOAT {
-			f, _ := strconv.ParseFloat(k, 64)
-			sum += f * v
-		} else {
-			m.total -= int(v)
-		}
-	}
-	m.result["mean"] = sum / float64(m.total)
 
-	return nil
+	fm, err := numeric.ND_Mapper(m.counts)
+	keys := fm.FloatSlice
+	f2s := fm.Float2String
+	totalFloat := fm.TotalFloat
+
+	sum := float64(0)
+	for _, k := range keys {
+		sum += k * m.counts[f2s[k]]
+	}
+	m.result["mean"] = sum / totalFloat
+
+	return err
 }
 
 func (m *Mean) Result() MetricResult {

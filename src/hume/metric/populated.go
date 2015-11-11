@@ -9,6 +9,10 @@ type Populated struct {
 	Field string `json:"field"`
 }
 
+func (p *Populated) Init() error {
+	return p.Counter.Initialize("true","false")
+}
+
 func (p *Populated) Process(rec *record.Record) {
 	v, ok := rec.Map[p.Field]
 	l := "true"

@@ -7,9 +7,12 @@ type Counter struct {
 	total  int
 }
 
-func (c *Counter) Init() error {
+func (c *Counter) Initialize(keys ...string) error {
 	var err error
 	c.counts = make(map[string]float64)
+	for _, k := range keys {
+		c.counts[k] = float64(0)
+	}
 	return err
 }
 

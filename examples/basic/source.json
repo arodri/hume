@@ -146,12 +146,12 @@
 			"type":"Percentile",
 			"name":"Percentile",
 			"field":"id",
-			"measure":80,
+			"count_by":0.1,
 			"evaluators":[
 				{
 					"evaluator":"ValueThreshold",
-					"description":"80th Percentile is 4",
-					"value":"percentile",
+					"description":"65th Percentile is 4",
+					"value":"65",
 					"threshold":4.0,
 					"error_on":"<>",
 					"silence":false,

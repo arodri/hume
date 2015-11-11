@@ -9,38 +9,32 @@ import(
 type Percentile struct {
 	NumericDistribution
 	result map[string]float64
-	Measure int `json:"measure"`
 }
 
 //NEAREST RANK METHOD (USES ONLY MEMBERS OF POPULATION - NO INTERPOLATION)
 func (p *Percentile) Finalize() error {
 	p.result = make(map[string]float64)
 
-	var keys []float64
-	m := make(map[float64]string)
-	for k, v := range p.counts {
-		if k != numeric.EMPTY_STRING && k != numeric.NOT_A_FLOAT {
-			f, _ := strconv.ParseFloat(k, 64)
-			keys = append(keys, f)
-			m[f] = k
-		} else {
-			p.total -= int(v)
-		}
-	}
+	fm, _ := numeric.ND_Mapper(p.counts)
+	keys := fm.FloatSlice
+	m := fm.Float2String
+	totalFloat := fm.TotalFloat
 	sort.Sort(sort.Float64Slice(keys))
 
-	threshold := float64(p.total) * float64(p.Measure) / 100
-	sum := float64(0)
-	//keep index of key coorsponding to last sum
-	var i int
-	var k float64
-	for i, k = range keys {
-		sum += float64(p.counts[m[k]])
-		if sum >= threshold {
-			break
+	for c := float64(0) ; c < 100 ; c++ {
+		threshold := totalFloat * c / 100
+		sum := float64(0)
+		//keep index of key coorsponding to last sum
+		var i int
+		var k float64
+		for i, k = range keys {
+			sum += p.counts[m[k]]
+			if sum >= threshold {
+				break
+			}
 		}
+		p.result[strconv.FormatFloat(c,'f',-1,64)] = keys[i]
 	}
-	p.result["percentile"] = keys[i]
 
 	return nil
 }

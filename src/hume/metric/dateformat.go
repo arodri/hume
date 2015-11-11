@@ -11,6 +11,10 @@ type DateFormat struct {
 	Field  string `json:"field"`
 }
 
+func (df *DateFormat) Init() error {
+	return df.Counter.Initialize("true","false")
+}
+
 func (df *DateFormat) Process(rec *record.Record) {
 	v, ok := rec.Map[df.Field]
 	l := "true"

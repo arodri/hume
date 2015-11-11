@@ -14,7 +14,7 @@ type FutureDate struct {
 
 func (fd *FutureDate) Init() error {
 	fd.date = time.Now()
-	return fd.Counter.Init()
+	return fd.Counter.Initialize("true","false")
 }
 
 func (fd *FutureDate) Process(rec *record.Record) {

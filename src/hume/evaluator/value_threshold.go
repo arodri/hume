@@ -2,6 +2,7 @@ package evaluator
 
 import (
 	"fmt"
+	"github.com/Sirupsen/logrus"
 )
 
 type ValueThreshold struct {
@@ -14,11 +15,11 @@ type ValueThreshold struct {
 func (v ValueThreshold) Evaluate(data map[string]float64, total int) Evaluation {
 	cnt, ok := data[v.Value]
 	if !ok {
-		cnt = 0
+		logrus.Error(fmt.Sprintf("Value %#v is not valid", v.Value))
 	}
 
 	testValue := cnt
-	prefix := fmt.Sprintf("Value=%s:%d", v.Value, cnt)
+	prefix := fmt.Sprintf("Value=%s:%0.2f", v.Value, cnt)
 	if !v.UseCount && total > 0 {
 		testValue = testValue / float64(total)
 		prefix = fmt.Sprintf("Value=%s:%0.2f%%", v.Value, testValue*100)

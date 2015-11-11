@@ -18,7 +18,7 @@ func (rt *RegexTest) Init() error {
 	if err != nil {
 		return err
 	}
-	return rt.Counter.Init()
+	return rt.Counter.Initialize("true","false")
 }
 
 func (rt *RegexTest) Process(rec *record.Record) {

@@ -16,7 +16,7 @@ func (vv *ValidValues) Init() error {
 	for _, val := range vv.Values {
 		vv.valueMap[val] = val
 	}
-	return vv.Counter.Init()
+	return vv.Counter.Initialize("true","false")
 }
 
 func (vv *ValidValues) Process(rec *record.Record) {

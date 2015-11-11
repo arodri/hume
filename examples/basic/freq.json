@@ -1,7 +1,9 @@
-[
-	{"key":"1", "value":2},
-	{"key":"2", "value":1},
-	{"key":"3", "value":1},
-	{"key":"4", "value":2},
-	{"key":"5", "value":1}
-]
+{
+	"histogram":[
+		{"key":"1", "value":2},
+		{"key":"2", "value":1},
+		{"key":"3", "value":1},
+		{"key":"4", "value":2},
+		{"key":"5", "value":1}
+	]
+}

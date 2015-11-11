@@ -11,6 +11,10 @@ type NumericDistribution struct {
 	Field string `json:"field"`
 }
 
+func (nd *NumericDistribution) Init() error {
+	return nd.Counter.Initialize()
+}
+
 func (nd *NumericDistribution) Process(rec *record.Record) {
 	var v string
 	s, _ := rec.Map[nd.Field]
