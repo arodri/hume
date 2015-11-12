@@ -77,6 +77,10 @@ func GetMetric(config []byte) Metric {
 		ft := Percentile{}
 		err = json.Unmarshal(config, &ft)
 		m.SetMetricImpl(&ft)
+	case "CDF":
+		ft := CDF{}
+		err = json.Unmarshal(config, &ft)
+		m.SetMetricImpl(&ft)
 
 	}
 	if err != nil {

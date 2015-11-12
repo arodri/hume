@@ -101,9 +101,8 @@
 				{
 					"evaluator":"VolumeTolerance",
 					"description":"Number of Records",
-					"target":5,
-					"min":0.75,
-					"max":1.25
+					"min":4,
+					"max":6
 				}
 			]
 		},
@@ -146,7 +145,6 @@
 			"type":"Percentile",
 			"name":"Percentile",
 			"field":"id",
-			"count_by":0.1,
 			"evaluators":[
 				{
 					"evaluator":"ValueThreshold",
@@ -156,6 +154,37 @@
 					"error_on":"<>",
 					"silence":false,
 					"use_count":true
+				}
+			]
+		},
+		{
+			"type":"CDF",
+			"name":"CDF",
+			"field":"id",
+			"evaluators":[
+				{
+					"evaluator":"NearestValueThreshold",
+					"description":"Cumulative density at 4.5 is less than 90%",
+					"value":"4.5",
+					"threshold":90,
+					"error_on":">",
+					"silence":false
+				}
+			]
+		},
+		{
+			"type":"CDF",
+			"name":"CDF",
+			"field":"id",
+			"evaluators":[
+				{
+					"evaluator":"NearestValueTolerance",
+					"description":"Cumulative density at 4.5 is between 70% and 90%",
+					"value":"4.5",
+					"min":70,
+					"max":90,
+					"error_on":">",
+					"silence":false
 				}
 			]
 		},

@@ -6,9 +6,8 @@ import (
 )
 
 type Tolerance struct {
-	Target       float64 `json:"target"`
-	MinTolerance float64 `json:"min"`
-	MaxTolerance float64 `json:"max"`
+	Min float64 `json:"min"`
+	Max float64 `json:"max"`
 }
 
 func (t *Tolerance) IsOkay(testValue float64, msg_prefix string) Evaluation {
@@ -17,10 +16,7 @@ func (t *Tolerance) IsOkay(testValue float64, msg_prefix string) Evaluation {
 		Ok:  true,
 	}
 
-	min := t.Target * t.MinTolerance
-	max := t.Target * t.MaxTolerance
-
-	if testValue < min || max < testValue {
+	if testValue < t.Min || t.Max < testValue {
 		e.Ok = false
 	} else if math.IsNaN(testValue) {
 		e.Ok = false
@@ -28,7 +24,7 @@ func (t *Tolerance) IsOkay(testValue float64, msg_prefix string) Evaluation {
 
 	e.Msg = fmt.Sprintf(
 		"%s Tolerance: %0.2f <= M <= %0.2f, Measured: %0.2f",
-		msg_prefix, min, max, testValue,
+		msg_prefix, t.Min, t.Max, testValue,
 	)
 
 	return e

@@ -37,6 +37,14 @@ func GetEvaluator(config []byte) Evaluator {
 		v := VolumeTolerance{}
 		err = json.Unmarshal(config, &v)
 		e = &v
+	case "NearestValueThreshold":
+		v := NearestValueThreshold{}
+		err = json.Unmarshal(config, &v)
+		e = &v
+	case "NearestValueTolerance":
+		v := NearestValueTolerance{}
+		err = json.Unmarshal(config, &v)
+		e = &v
 	case "KS":
 		v := KS{}
 		err = json.Unmarshal(config, &v)
