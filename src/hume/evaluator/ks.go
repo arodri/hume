@@ -1,18 +1,18 @@
 package evaluator
 
 import (
-	"hume/lib/numeric"
-	"hume/lib/histogram"
 	"fmt"
-	"sort"
-	"math"
 	"github.com/Sirupsen/logrus"
+	"hume/lib/histogram"
+	"hume/lib/numeric"
+	"math"
+	"sort"
 )
 
 type KS struct {
 	BaseEvaluator
 	Thresholder
-	FileBenchmark string `json:"benchmark"`
+	BenchmarkJSON []histogram.HistEntry `json:"benchmark"`
 }
 
 func arrayMapper(array1 []float64, array2 []float64) (map[float64][2]bool, []float64) {
@@ -35,29 +35,27 @@ func arrayMapper(array1 []float64, array2 []float64) (map[float64][2]bool, []flo
 	return mapper, keys
 }
 
-func (ks *KS) Evaluate(data map[string]float64, total int) Evaluation {
+func (ks *KS) compute(data map[string]float64, total int) (float64, error, string) {
 	var err error
 	var msg string
-	e := Evaluation{ks.GetDescription(), "", false}
+	testValue := float64(0)
 
 	fm_data, _ := numeric.ND_Mapper(data)
 	keys_data := fm_data.FloatSlice
 	map_data := fm_data.Float2String
 	totalZero := fm_data.TotalFloat
 
-	benchmark, err := histogram.GetFloatMap(ks.FileBenchmark)
+	benchmark, err := histogram.GetFloatMap(ks.BenchmarkJSON)
 	if err != nil {
 		msg = fmt.Sprintf("Error in benchmark float map: %s", err)
 		logrus.Error(msg)
-		e.Msg = msg
-		return e
+		return testValue, err, msg
 	}
 	fm_benchmark, err := numeric.ND_Mapper(benchmark)
 	if err != nil {
 		msg = fmt.Sprintf("Error in mapping benchmark to NumericDistribution: %s", err)
 		logrus.Error(msg)
-		e.Msg = msg
-		return e
+		return testValue, err, msg
 	}
 	keys_benchmark := fm_benchmark.FloatSlice
 	map_benchmark := fm_benchmark.Float2String
@@ -79,16 +77,37 @@ func (ks *KS) Evaluate(data map[string]float64, total int) Evaluation {
 			oneSoFar += benchmark[map_benchmark[f]]
 		}
 
-		currentKS = (zeroSoFar/totalZero) - (oneSoFar/totalOne)
+		currentKS = (zeroSoFar / totalZero) - (oneSoFar / totalOne)
 
 		if math.Abs(currentKS) > math.Abs(maxKS) || math.IsNaN(currentKS) {
 			maxKS = currentKS
 		}
 	}
 
-	testValue := maxKS * 100
+	testValue = maxKS * 100
+	return testValue, err, msg
+}
+
+func (ks *KS) Evaluate(data map[string]float64, total int) Evaluation {
+	e := Evaluation{ks.GetDescription(), "", false}
+	testValue, err, msg := ks.compute(data, total)
+	if err != nil {
+		e.Msg = msg
+		return e
+	}
+
 	prefix := fmt.Sprintf("Value=%s:abs(%f)", "KS", testValue)
 	e = ks.IsOkay(math.Abs(testValue), prefix)
 	e.Description = ks.GetDescription()
 	return e
+}
+
+func (ks *KS) SetBenchmark(histogram []histogram.HistEntry) {
+	ks.BenchmarkJSON = histogram
+}
+
+func (ks *KS) Train(data map[string]float64, total int) error {
+	hist, err := histogram.MapToHist(data)
+	ks.SetBenchmark(hist)
+	return err
 }

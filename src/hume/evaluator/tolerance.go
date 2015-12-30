@@ -29,3 +29,12 @@ func (t *Tolerance) IsOkay(testValue float64, msg_prefix string) Evaluation {
 
 	return e
 }
+
+func (t *Tolerance) SetValue(testValue float64) {
+	if testValue < t.Min {
+		t.Min = testValue
+	}
+	if testValue > t.Max {
+		t.Max = testValue
+	}
+}

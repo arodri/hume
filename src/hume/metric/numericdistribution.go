@@ -1,12 +1,13 @@
 package metric
 
-import(
+import (
 	"hume/lib/numeric"
 	"hume/record"
 	"strconv"
 )
 
 type NumericDistribution struct {
+	BaseMetric
 	Counter
 	Field string `json:"field"`
 }

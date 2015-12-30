@@ -5,6 +5,7 @@ import (
 )
 
 type Mean struct {
+	BaseMetric
 	NumericDistribution
 	result map[string]float64
 }

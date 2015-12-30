@@ -1,12 +1,13 @@
 package metric
 
-import(
+import (
 	"hume/lib/numeric"
-	"strconv"
 	"sort"
+	"strconv"
 )
 
 type Percentile struct {
+	BaseMetric
 	NumericDistribution
 	result map[string]float64
 }
@@ -21,7 +22,7 @@ func (p *Percentile) Finalize() error {
 	totalFloat := fm.TotalFloat
 	sort.Sort(sort.Float64Slice(keys))
 
-	for c := float64(0) ; c < 100 ; c++ {
+	for c := float64(0); c < 100; c++ {
 		threshold := totalFloat * c / 100
 		sum := float64(0)
 		//keep index of key coorsponding to last sum
@@ -33,12 +34,12 @@ func (p *Percentile) Finalize() error {
 				break
 			}
 		}
-		p.result[strconv.FormatFloat(c,'f',-1,64)] = keys[i]
+		p.result[strconv.FormatFloat(c, 'f', -1, 64)] = keys[i]
 	}
 
 	return nil
 }
 
-func (p *Percentile) Result() MetricResult{
+func (p *Percentile) Result() MetricResult {
 	return MetricResult{p.result, p.total}
 }

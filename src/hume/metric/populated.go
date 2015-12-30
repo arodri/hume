@@ -5,12 +5,13 @@ import (
 )
 
 type Populated struct {
+	BaseMetric
 	Counter
 	Field string `json:"field"`
 }
 
 func (p *Populated) Init() error {
-	return p.Counter.Initialize("true","false")
+	return p.Counter.Initialize("true", "false")
 }
 
 func (p *Populated) Process(rec *record.Record) {

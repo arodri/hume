@@ -197,7 +197,13 @@
 					"evaluator":"KS",
 					"description":"KS is less than 10",
 					"threshold":10.0,
-					"benchmark":"freq.json",
+					"benchmark":[
+						{"key":"1", "value":2},
+						{"key":"2", "value":1},
+						{"key":"3", "value":1},
+						{"key":"4", "value":2},
+						{"key":"5", "value":1}
+					],
 					"error_on":">",
 					"silence":false,
 					"use_count":true

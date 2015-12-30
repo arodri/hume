@@ -8,6 +8,7 @@ import (
 )
 
 type FieldCount struct {
+	BaseMetric
 	Counter
 }
 

@@ -6,13 +6,14 @@ import (
 )
 
 type DateFormat struct {
+	BaseMetric
 	Counter
 	Format string `json:"format"`
 	Field  string `json:"field"`
 }
 
 func (df *DateFormat) Init() error {
-	return df.Counter.Initialize("true","false")
+	return df.Counter.Initialize("true", "false")
 }
 
 func (df *DateFormat) Process(rec *record.Record) {

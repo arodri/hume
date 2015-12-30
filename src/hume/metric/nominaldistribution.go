@@ -1,13 +1,13 @@
 package metric
 
-import(
+import (
 	"hume/record"
 )
 
 type NominalDistribution struct {
+	BaseMetric
 	Counter
 	Field string `json:"field"`
-
 }
 
 func (nd *NominalDistribution) Init() error {

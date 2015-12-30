@@ -5,6 +5,7 @@ import (
 )
 
 type ValidValues struct {
+	BaseMetric
 	Counter
 	Field    string   `json:"field"`
 	Values   []string `json:"values"`
@@ -16,7 +17,7 @@ func (vv *ValidValues) Init() error {
 	for _, val := range vv.Values {
 		vv.valueMap[val] = val
 	}
-	return vv.Counter.Initialize("true","false")
+	return vv.Counter.Initialize("true", "false")
 }
 
 func (vv *ValidValues) Process(rec *record.Record) {

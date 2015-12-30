@@ -5,6 +5,7 @@ import (
 )
 
 type NumRecords struct {
+	BaseMetric
 	Counter
 }
 

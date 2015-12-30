@@ -6,6 +6,7 @@ import (
 )
 
 type CDF struct {
+	BaseMetric
 	NumericDistribution
 	result map[string]float64
 }

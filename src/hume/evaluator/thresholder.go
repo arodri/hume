@@ -2,16 +2,13 @@ package evaluator
 
 import (
 	"fmt"
-	"strings"
 	"math"
+	"strings"
 )
 
 type Thresholder struct {
-	Threshold      float64 `json:"threshold"`
-	ErrorOn        string  `json:"error_on"`
-	errorOnLess    bool    `json:"error_less"`
-	errorOnEqual   bool    `json:"error_equal"`
-	errorOnGreater bool    `json:"error_greater"`
+	Threshold float64 `json:"threshold"`
+	ErrorOn   string  `json:"error_on"`
 }
 
 func (t *Thresholder) IsOkay(testValue float64, msg_prefix string) Evaluation {
@@ -30,7 +27,7 @@ func (t *Thresholder) IsOkay(testValue float64, msg_prefix string) Evaluation {
 		e.Ok = false
 	} else if errorOnLess && testValue < t.Threshold {
 		e.Ok = false
-	} else if math.IsNaN(testValue) { 
+	} else if math.IsNaN(testValue) {
 		e.Ok = false
 	}
 
@@ -50,4 +47,8 @@ func (t *Thresholder) IsOkay(testValue float64, msg_prefix string) Evaluation {
 	)
 
 	return e
+}
+
+func (t *Thresholder) SetValue(testValue float64) {
+	t.Threshold = testValue
 }

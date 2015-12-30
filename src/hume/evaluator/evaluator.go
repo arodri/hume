@@ -22,6 +22,7 @@ func GetEvaluator(config []byte) Evaluator {
 	be := BaseEvaluator{}
 	err = json.Unmarshal(config, &be)
 	if err != nil {
+		log.Error(err)
 		log.Fatal("Invalid evaluator config, need evaluator, and silence defined", err)
 	}
 
@@ -52,6 +53,7 @@ func GetEvaluator(config []byte) Evaluator {
 	}
 
 	if err != nil {
+		log.Error(err)
 		log.Fatal(fmt.Sprintf("Invalid configuration for %#v", be))
 	}
 
@@ -78,6 +80,7 @@ func (be *BaseEvaluator) GetDescription() string {
 
 type Evaluator interface {
 	Evaluate(data map[string]float64, total int) Evaluation
+	Train(data map[string]float64, total int) error
 	GetType() string
 	ShouldAlert() bool
 	GetDescription() string

@@ -27,14 +27,13 @@ func (s *Source) Init() error {
 		logrus.Debug(fmt.Sprintf("Initializing Metric: %s", m.GetName()))
 		m.SetInputChannel(make(chan *record.Record, 1000))
 		m.SetWaitGroup(&s.metricWG)
-		s.metricWG.Add(1)
 
 		err = m.Init()
 		if err != nil {
 			logrus.Fatal(fmt.Sprintf("Error intializing %s", m.GetName()), err)
 		}
 
-		m.Collect()
+		metric.Collect(m)
 	}
 
 	return err
@@ -66,7 +65,7 @@ func (s *Source) Evaluate() (int, int) {
 	total := 0
 
 	for _, m := range s.Metrics {
-		for _, e := range m.Evaluate() {
+		for _, e := range metric.Evaluate(m) {
 			if e.Ok {
 				logrus.Infof("%s: OK", e.Description)
 			} else {
@@ -76,6 +75,19 @@ func (s *Source) Evaluate() (int, int) {
 			total += 1
 			logrus.Debug(e.Msg)
 		}
+	}
+	return err_cnt, total
+}
+
+func (s *Source) Train() (int, int) {
+	err_cnt := 0
+	total := 0
+
+	for _, m := range s.Metrics {
+		logrus.Debugf("Training: %s", m.GetName())
+		this_cnt, this_total := metric.Train(m)
+		err_cnt += this_cnt
+		total += this_total
 	}
 	return err_cnt, total
 }

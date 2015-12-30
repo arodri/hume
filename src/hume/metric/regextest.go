@@ -6,6 +6,7 @@ import (
 )
 
 type RegexTest struct {
+	BaseMetric
 	Counter
 	Field string `json:"field"`
 	Regex string `json:"regex"`
@@ -18,7 +19,7 @@ func (rt *RegexTest) Init() error {
 	if err != nil {
 		return err
 	}
-	return rt.Counter.Initialize("true","false")
+	return rt.Counter.Initialize("true", "false")
 }
 
 func (rt *RegexTest) Process(rec *record.Record) {
