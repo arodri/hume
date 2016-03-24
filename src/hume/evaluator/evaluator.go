@@ -35,7 +35,7 @@ func GetEvaluator(config []byte) Evaluator {
 		err = json.Unmarshal(config, &v)
 		e = &v
 	case "ValueTolerance":
-		v := ValueThreshold{}
+		v := ValueTolerance{}
 		err = json.Unmarshal(config, &v)
 		e = &v
 	case "VolumeTolerance":
