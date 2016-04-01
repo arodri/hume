@@ -18,11 +18,11 @@ func (df *DateFormat) Init() error {
 
 func (df *DateFormat) Process(rec *record.Record) {
 	v, ok := rec.Map[df.Field]
-	l := "true"
+	l := "false"
 	if ok {
 		_, err := time.Parse(df.Format, v)
-		if err != nil {
-			l = "false"
+		if err == nil || v == "" {
+			l = "true"
 		}
 	}
 	df.Count(l)
